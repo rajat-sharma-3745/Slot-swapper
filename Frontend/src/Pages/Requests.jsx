@@ -12,7 +12,6 @@ const RequestsPage = () => {
       try {
         const {data} = await axiosInstance.get(API_PATHS.SLOT.GET_SWAP_REQ)
        
-        console.log(data)
         setIncomingRequests(data.incoming || []);
         setOutgoingRequests(data.outgoing || []);
       } catch (err) {
