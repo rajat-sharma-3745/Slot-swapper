@@ -4,15 +4,19 @@ import CreateEventForm from "./EventForm";
 import CalendarDayCell from "./CalendarDayCell";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
+import Spinner from "./Spinner";
 
 export default function Dashboard() {
   const { user } = useAppContext();
   const [events, setEvents] = useState([]);
   const [openEventForm, setOpenEventForm] = useState(false);
+    const [loading,setLoading] = useState(false)
+
  
 
   const fetchEvents = async () => {
     try {
+      setLoading(true)
     const {data} = await axiosInstance.get(API_PATHS.EVENTS.GET)
 
   
@@ -20,11 +24,16 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error fetching events:", error);
     }
+    finally{
+      setLoading(false)
+    }
   };
   useEffect(() => {
 
     fetchEvents();
   }, [user]);
+
+  
 
   const daysInMonth = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -35,6 +44,7 @@ export default function Dashboard() {
     });
   };
 
+  if(loading) return <Spinner/>
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {/* Header */}

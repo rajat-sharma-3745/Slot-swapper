@@ -6,16 +6,21 @@ import { toast } from "sonner";
 const RequestsPage = () => {
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [outgoingRequests, setOutgoingRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const {data} = await axiosInstance.get(API_PATHS.SLOT.GET_SWAP_REQ)
-       
+      setLoading(true);
+
+        const { data } = await axiosInstance.get(API_PATHS.SLOT.GET_SWAP_REQ);
+
         setIncomingRequests(data.incoming || []);
         setOutgoingRequests(data.outgoing || []);
       } catch (err) {
         console.error("Failed to load swap requests:", err);
+      }finally{
+        setLoading(false);
       }
     };
     fetchRequests();
@@ -23,7 +28,10 @@ const RequestsPage = () => {
 
   const handleResponse = async (requestId, accept) => {
     try {
-      const {data} = await axiosInstance.patch(API_PATHS.SLOT.SWAP_RES(requestId),{accept})
+      const { data } = await axiosInstance.patch(
+        API_PATHS.SLOT.SWAP_RES(requestId),
+        { accept }
+      );
       if (data) {
         toast.success(data?.message);
         setIncomingRequests((prev) =>
@@ -38,18 +46,20 @@ const RequestsPage = () => {
   };
 
   return (
-  <div className="p-6  min-h-screen bg-gray-100">
+    <div className="p-6  min-h-screen bg-gray-100">
       <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
         Swap Requests
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto w-full">
-        {/* Incoming Requests */}
         <div className="bg-white shadow-lg rounded-2xl p-4">
           <h2 className="text-lg font-semibold mb-4 text-blue-600 border-b pb-2">
             Incoming Requests
           </h2>
-          {incomingRequests.length > 0 ? (
+          {loading ? (
+          Array.from({ length: 3 }).map((_, i) => <div key={i}>{shimmerCard}</div>)
+        ) :
+          incomingRequests.length > 0 ? (
             incomingRequests.map((req) => (
               <div
                 key={req._id}
@@ -85,12 +95,15 @@ const RequestsPage = () => {
           )}
         </div>
 
-        {/* Outgoing Requests */}
         <div className="bg-white shadow-lg rounded-2xl p-4">
           <h2 className="text-lg font-semibold mb-4 text-green-600 border-b pb-2">
             Outgoing Requests
           </h2>
-          {outgoingRequests.length > 0 ? (
+          {loading ? (
+          
+          Array.from({ length: 3 }).map((_, i) => <div key={i}>{shimmerCard}</div>)
+        ) :
+          outgoingRequests.length > 0 ? (
             outgoingRequests.map((req) => (
               <div
                 key={req._id}
@@ -99,7 +112,7 @@ const RequestsPage = () => {
                 <p className="text-sm text-gray-700 mb-1">
                   Sent to <strong>{req.toUser.name}</strong>
                 </p>
-               <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700">
                   You offered your <b>{req.mySlot?.title}</b> (
                   {new Date(req.mySlot?.startTime).toLocaleString()})
                 </p>
@@ -133,3 +146,15 @@ const RequestsPage = () => {
 };
 
 export default RequestsPage;
+
+const shimmerCard = (
+  <div className="border rounded-lg p-3 mb-3 animate-pulse">
+    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+    <div className="h-3 bg-gray-200 rounded w-5/6 mb-1"></div>
+    <div className="h-3 bg-gray-200 rounded w-2/3 mb-3"></div>
+    <div className="flex gap-2">
+      <div className="h-7 bg-green-200 rounded w-16"></div>
+      <div className="h-7 bg-red-200 rounded w-16"></div>
+    </div>
+  </div>
+);
