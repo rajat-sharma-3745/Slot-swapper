@@ -126,17 +126,17 @@ By default Vite serves the app on `http://localhost:5173/` (or the port shown in
 
 Below is a concise list of main endpoints. Adjust paths if your route files have different base paths. All endpoints that change state or return user-specific data require a valid token which is being sent in cookie.
 
-| Purpose                             | Method | Path                     |                     Authentication | Body / Notes                                                                               |            |                                                                  |
-| ----------------------------------- | -----: | ------------------------ | ---------------------------------: | ------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------------- |
-| Register user                       |   POST | `/api/users/signup`    |                                 No | `{ name, email, password }`       Returns userInfo & `{ token }              `                                           |            |                                                                  |
-| Login user                          |   POST | `/api/users/login`       |                                 No | `{ email, password }` -> Returns userInfo & `{ token }`                                               |            |                                                                  
-| Create event                        |   POST | `/api/events`            |                                Yes | `{ title, startTime, endTime }`                                        |            |                                                                  |
-| Get all events                      |    GET | `/api/events`            | Yes |                                                                                                                               
-| Update event                        |    PUT | `/api/events/:id`        |                   Yes (owner only) | `{ status }           `                                                              |  
-| Create swap request                 |   POST | `/api/swap-request`             |                                Yes | `{ mySlotId,theirSlotId }` |            |                                                                  |
-| Get swap requests (user)            |    GET | `/api/swap-requests`             |                                Yes | Returns swap requests where user is requester/owner                                        |            |                                                                  |
-| Get marketplace swaps               |    GET | `/api/swappable-slots` |                            Yes | List of open swap requests (available to browse)                                           |            |                                                                  |
-| Update swap (accept/decline) |    PUT | `/api/swap-response/:requestId`         |                                Yes | `{ status: 'accepted' ,  'declined' , 'cancelled' }` |
+| Purpose                      | Method | Path                            | Authentication   | Body / Notes                                                   |  
+| ---------------------------- | ------ | ------------------------------- | ---------------- | -------------------------------------------------------------- |
+| Register user                | POST   | `/api/users/signup`             | No               | `{ name, email, password }` → Returns `userInfo` & `{ token }` | 
+| Login user                   | POST   | `/api/users/login`              | No               | `{ email, password }` → Returns `userInfo` & `{ token }`       | 
+| Create event                 | POST   | `/api/events`                   | Yes              | `{ title, startTime, endTime }`                                | 
+| Get all events               | GET    | `/api/events`                   | Yes              | –                                                              |
+| Update event                 | PUT    | `/api/events/:id`               | Yes (owner only) | `{ status }`                                                   | 
+| Create swap request          | POST   | `/api/swap-request`             | Yes              | `{ mySlotId, theirSlotId }`                                    | 
+| Get swap requests (user)     | GET    | `/api/swap-requests`            | Yes              | Returns swap requests where user is requester/owner            | 
+| Get marketplace swaps        | GET    | `/api/swappable-slots`          | Yes              | List of open swap requests (available to browse)               | 
+| Update swap (accept/decline) | PUT    | `/api/swap-response/:requestId` | Yes              | `{ status: 'accepted' ,'declined' ,'cancelled' }`              |    
 
 
 
