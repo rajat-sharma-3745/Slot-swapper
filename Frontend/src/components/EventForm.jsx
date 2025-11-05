@@ -35,13 +35,13 @@ export default function CreateEventForm({ onClose, fetchEvents }) {
       if (data) {
         fetchEvents();
         setFormData({ title: "", startTime: "", endTime: "" });
-        toast.success("event submitted");
+        toast.success("Event Created");
+        onClose();
       }
     } catch (error) {
       console.error("Error:", error?.response?.data?.message);
     } finally {
       setLoading(false);
-      onClose();
     }
   };
 
@@ -85,7 +85,7 @@ export default function CreateEventForm({ onClose, fetchEvents }) {
 
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 mt-2"
+            className="bg-blue-500 cursor-pointer text-white py-2 rounded hover:bg-blue-600 mt-2"
           >
             {loading ? "Creating..." : "Create Event"}
           </button>
