@@ -9,21 +9,21 @@ const MarketPlace = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [offerSlotId, setOfferSlotId] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [reqLoading, setReqLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchSwappableSlots = async () => {
-     try {
+  const fetchSwappableSlots = async () => {
+    try {
       setLoading(true);
-       const {data} = await axiosInstance.get(API_PATHS.SLOT.GETSWAPSLOT)
-       setAvailableSlots(data || []);
-     } catch (error) {
-      console.error(error)
-     }finally{
-      setLoading(false)
-     }
-     
-    };
+      const { data } = await axiosInstance.get(API_PATHS.SLOT.GETSWAPSLOT);
+      setAvailableSlots(data || []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchSwappableSlots();
   }, []);
 
@@ -44,18 +44,23 @@ const MarketPlace = () => {
 
   const handleSwapRequest = async () => {
     try {
+      setReqLoading(true);
       const { data } = await axiosInstance.post(API_PATHS.SLOT.SWAP_REQ, {
         mySlotId: offerSlotId,
         theirSlotId: selectedSlot._id,
       });
       if (data) {
-          toast.success(data?.message)
-        setShowModal(false);
+        toast.success(data?.message);
+      setAvailableSlots(prev=>prev.filter((item)=>item._id!==selectedSlot._id))
+
       } else {
         console.log("Failed to send swap request");
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setReqLoading(false);
+      setShowModal(false);
     }
   };
   return (
@@ -66,22 +71,19 @@ const MarketPlace = () => {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        { loading ? (
-        // 🔹 Shimmer skeletons (show while loading)
-        Array.from({ length: 9 }).map((_, i) => (
-          <div
-            key={i}
-            className="border rounded-xl p-4 shadow-sm bg-white animate-pulse"
-          >
-            <div className="h-5 bg-gray-200 rounded w-3/4 mb-3"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
-            <div className="h-8 bg-blue-200 rounded w-1/3"></div>
-          </div>
-        ))
-      ) :
-        
-        availableSlots.length > 0 ? (
+        {loading ? (
+          Array.from({ length: 9 }).map((_, i) => (
+            <div
+              key={i}
+              className="border rounded-xl p-4 shadow-sm bg-white animate-pulse"
+            >
+              <div className="h-5 bg-gray-200 rounded w-3/4 mb-3"></div>
+              <div className="h-4 bg-gray-200 rounded w-5/6 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+              <div className="h-8 bg-blue-200 rounded w-1/3"></div>
+            </div>
+          ))
+        ) : availableSlots.length > 0 ? (
           availableSlots.map((slot) => (
             <div
               key={slot._id}
@@ -97,7 +99,7 @@ const MarketPlace = () => {
                   setSelectedSlot(slot);
                   setShowModal(true);
                 }}
-                className="mt-3 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                className="mt-3 cursor-pointer px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
               >
                 Request Swap
               </button>
@@ -150,7 +152,7 @@ const MarketPlace = () => {
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
-                Confirm Swap
+                {reqLoading ? "Processing..." : "Confirm Swap"}
               </button>
             </div>
           </div>

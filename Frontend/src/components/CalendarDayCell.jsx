@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
+import { toast } from "sonner";
 
-// CalendarDayCell.jsx
 export default function CalendarDayCell({ day, dayEvents = [], fetchEvents }) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading,setLoading] = useState(false)
+
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
@@ -14,18 +16,22 @@ export default function CalendarDayCell({ day, dayEvents = [], fetchEvents }) {
 
   const handleMakeSwappable = async () => {
     try {
+      setLoading(true)
       const { data } = await axiosInstance.patch(API_PATHS.EVENTS.UPDATE(selectedEvent?._id),{status:'SWAPPABLE'});
 
       if (data) {
         fetchEvents();
-        setShowModal(false);
-        console.log('Swapped')
+        toast.success('Event updated to swappable')
       } else {
         console.error("Failed to make swappable");
       }
     } catch (err) {
       console.error(err?.response?.data?.message);
-    }
+    }finally{
+        setLoading(false)
+        setShowModal(false);
+
+      }
   };
   return (
     <div className="relative w-full h-10 sm:h-14 md:h-16 border border-gray-300 rounded-lg bg-white flex flex-col">
@@ -83,7 +89,7 @@ export default function CalendarDayCell({ day, dayEvents = [], fetchEvents }) {
                   onClick={handleMakeSwappable}
                   className="cursor-pointer px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600"
                 >
-                  Make Swappable
+                {loading?"Making...":"Make Swappable"}
                 </button>
               )}
             </div>

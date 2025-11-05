@@ -7,6 +7,7 @@ const RequestsPage = () => {
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [outgoingRequests, setOutgoingRequests] = useState([]);
   const [loading, setLoading] = useState(false);
+ const [loadingAction, setLoadingAction] = useState(null); 
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -28,6 +29,7 @@ const RequestsPage = () => {
 
   const handleResponse = async (requestId, accept) => {
     try {
+      setLoadingAction(accept ? "accept" : "reject");
       const { data } = await axiosInstance.patch(
         API_PATHS.SLOT.SWAP_RES(requestId),
         { accept }
@@ -42,6 +44,8 @@ const RequestsPage = () => {
       }
     } catch (err) {
       console.error(err);
+    }finally{
+      setLoadingAction(null);
     }
   };
 
@@ -79,13 +83,13 @@ const RequestsPage = () => {
                     onClick={() => handleResponse(req._id, true)}
                     className="px-4 cursor-pointer py-2 bg-green-500 text-white text-xs rounded hover:bg-green-600"
                   >
-                    Accept
+                  {loadingAction === "accept" ? "Accepting..." : "Accept"}
                   </button>
                   <button
                     onClick={() => handleResponse(req._id, false)}
                     className="px-4 cursor-pointer py-2 bg-red-500 text-white text-xs rounded hover:bg-red-600"
                   >
-                    Reject
+                   {loadingAction === "reject" ? "Rejecting..." : "Reject"}
                   </button>
                 </div>
               </div>

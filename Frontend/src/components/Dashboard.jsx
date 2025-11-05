@@ -31,7 +31,7 @@ export default function Dashboard() {
   useEffect(() => {
 
     fetchEvents();
-  }, [user]);
+  }, []);
 
   
 
