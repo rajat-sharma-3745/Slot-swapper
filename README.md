@@ -1,4 +1,4 @@
-# Slot Swapper (rajat-sharma-3745-slot-swapper)
+# Slot Swapper 
 
 **A lightweight slot/event swapping application** — SlotSwapper is a peer-to-peer time-slot scheduling application built using the MERN stack (MongoDB, Express, React, Node.js).
 It allows users to manage their calendars, mark busy slots as swappable, and exchange time slots with other users seamlessly.
