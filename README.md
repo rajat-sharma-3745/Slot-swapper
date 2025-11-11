@@ -64,7 +64,7 @@ cd SlotSwapper
 1. Open a terminal and `cd` into the backend folder:
 
 ```bash
-cd rajat-sharma-3745-slot-swapper/Backend
+cd Backend
 ```
 
 2. Install dependencies:
@@ -102,7 +102,7 @@ The backend typically listens on port `3000` (or the port set in `.env`).
 1. Open a separate terminal and `cd` into the frontend folder:
 
 ```bash
-cd rajat-sharma-3745-slot-swapper/Frontend
+cd Frontend
 ```
 
 2. Install dependencies:
