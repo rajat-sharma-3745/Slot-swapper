@@ -55,7 +55,7 @@ This project implements a simple system where users can create/manage events (ti
 > Follow both backend and frontend steps to run the app locally.
 ## Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/SlotSwapper.git
+git clone https://github.com/rajat-sharma-3745/SlotSwapper.git
 cd SlotSwapper
 ```
 
